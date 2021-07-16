@@ -1,2 +1,2 @@
-# Do not add MLCube directory.
-mlcube/
+# Do not add MLCube's workspace directory.
+workspace/
