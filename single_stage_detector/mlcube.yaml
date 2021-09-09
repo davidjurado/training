@@ -6,21 +6,20 @@ authors:
 platform:
   accelerator_count: 8
 
-container:
+docker:
   image: mlcommons/train_ssd:0.0.1
   build_context: "."
   build_file: "Dockerfile.mlcube"
 
 tasks:
   download_data:
-    io:
-      - {name: cache_dir, type: directory, io: output, default: $WORKSPACE/cache}
-      - {name: data_dir, type: directory, io: output, default: $WORKSPACE/data}
+    parameters:
+      inputs: {}
+      outputs: {data_dir: "data/", cache_dir: "cache/"}
   download_model:
-    io:
-      - {name: model_dir, type: directory, io: output, default: $WORKSPACE/pretrained_model}
+    parameters:
+      inputs: {}
+      outputs: {model_dir: "pretrained_model/"}
   train:
-    io:
-      - {name: data_dir, type: directory, io: input, default: $WORKSPACE/data}
-      - {name: pretrained_backbone, type: file, io: input, default: $WORKSPACE/pretrained_model/resnet34-333f7ec4.pth}
-      - {name: parameters_file, type: file, io: input, default: $WORKSPACE/parameters.yaml}
+    parameters:
+      inputs: {data_dir: "data/", pretrained_backbone: "pretrained_model/resnet34-333f7ec4.pth", parameters_file: "parameters.yaml"}
