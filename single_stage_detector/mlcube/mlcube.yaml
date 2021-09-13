@@ -1,0 +1,41 @@
+name: Single Stage Detector
+description: MLCommons SSD Training Reference Benchmark
+authors: 
+ - {name: "MLCommons Best Practices Working Group"}
+
+platform:
+  # Edit this according to your system specs
+  accelerator_count: 1
+
+docker:
+  # Image name.
+  image: mlcommons/train_ssd:0.0.1
+  # Docker build context relative to $MLCUBE_ROOT. Default is `build`.
+  build_context: "../"
+  # Docker file name within docker build context, default is `Dockerfile`.
+  build_file: "Dockerfile.mlcube"
+
+tasks:
+  # Download COCO 2017 dataset
+  download_data:
+    parameters:
+      # Cache directory for compressed datasets and annotations (COCO 2017). Will contain the following files:
+      # `train2017.zip`, `val2017.zip` and `annotations_trainval2017.zip`. Total size is ~ 20G. If these files are not
+      # present, they will be downloaded here.
+      # Directory for uncompressed datasets. Will contain the following subdirectories: `train2017`, `val2017` and
+      #      `annotations`. Total size is ~ 20G. This is basically the content of archives in **cache_dir**.
+      outputs: {cache_dir: cache/, data_dir: data/}
+  # Download ResNet-34 weights
+  download_model:
+    parameters:
+      # Directory location where model weights will vbe downloaded to (file name - resnet34-333f7ec4.pth)
+      outputs: {model_dir: data/}
+  # Train SSD model
+  train:
+    parameters:
+      # data_dir: see Download::data_dir
+      # pretrained_backbone: The ResNet-34 backbone is initialized with weights from PyTorch hub file
+      # parameters_file: Yaml file with training parameters.
+      inputs: {data_dir: data/,
+              pretrained_backbone: {type: file, default: data/resnet34-333f7ec4.pth},
+              parameters_file: {type: file, default: parameters.yaml}}
