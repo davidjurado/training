@@ -1,6 +1,6 @@
 Cython==0.28.4
 git+https://github.com/NVIDIA/apex.git@9041a868a1a253172d94b113a963375b9badd030#egg=apex
-mlperf-compliance==0.0.10
+git+https://github.com/mlperf/logging.git@1.0.0
 cycler==0.10.0
 kiwisolver==1.0.1
 matplotlib==2.2.2

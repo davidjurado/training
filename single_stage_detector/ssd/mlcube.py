@@ -77,6 +77,17 @@ class TrainTask(object):
         process.wait()
 
 
+class CheckLogsTask(object):
+    @staticmethod
+    def run(log_dir: str) -> None:
+        for filename in os.listdir(log_dir):
+            log_file = os.path.join(log_dir, filename)
+            if os.path.isfile(log_file):
+                command = f"echo {log_file}; python -m mlperf_logging.compliance_checker --ruleset 1.0.0 --config 0.7.0/open_ssd.yaml {log_file}"
+                ret = subprocess.run(command, capture_output=True, shell=True)
+                print(ret.stdout.decode())
+
+
 @app.command("download_data")
 def download_data(cache_dir: str = typer.Option(..., '--cache_dir'),
                   data_dir: str = typer.Option(..., '--data_dir')):
@@ -93,6 +104,11 @@ def train(data_dir: str = typer.Option(..., '--data_dir'),
           pretrained_backbone: str = typer.Option(..., '--pretrained_backbone'),
           parameters_file: str = typer.Option(..., '--parameters_file')):
     TrainTask.run(data_dir, pretrained_backbone, parameters_file)
+
+
+@app.command("check_logs")
+def check_logs(log_dir: str = typer.Option(..., '--log_dir')):
+    CheckLogsTask.run(log_dir)
 
 
 if __name__ == '__main__':

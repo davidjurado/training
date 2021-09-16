@@ -23,3 +23,8 @@ tasks:
   train:
     parameters:
       inputs: {data_dir: "data/", pretrained_backbone: "pretrained_model/resnet34-333f7ec4.pth", parameters_file: "parameters.yaml"}
+      outputs: {log_dir: "logs/"}
+  check_logs:
+    parameters:
+      inputs: {log_dir: "logs/"}
+      outputs: {}
